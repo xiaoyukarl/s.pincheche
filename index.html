@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>拼车车</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" type="text/css" rel="stylesheet"/>
+		<script src="js/mui.min.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<h1 class="mui-title">拼车车</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="img/cbd.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/yuantiao.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/code.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/shuijiao.jpg" /></a></div>
+					<div class="mui-slider-item"><a href="#"><img src="img/cbd.jpg" /></a></div>
+					<div class="mui-slider-item mui-slider-item-duplicate"><a href="#"><img src="img/yuantiao.jpg" /></a></div>
+				</div>
+			</div>
+			
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+					<a href="#">
+						<span class="mui-icon mui-icon-home"></span>
+						<div class="mui-media-body">车找人</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+					<a href="#">
+						<span class="mui-icon mui-icon-email"></span>
+						<div class="mui-media-body">人找车</div>
+					</a>
+				</li>
+			</ul>
+			
+			<div id="detail-content">
+				
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-media" style="background: aquamarine;">
+						<a href="javascript:;">
+							列表
+						</a>
+					</li>
+				</ul>
+				
+				<div class="mui-card">
+					<div class="mui-card-header mui-card-media">
+						<img src="img/logo.png">
+						<div class="mui-media-body">
+							小M
+							<p>发表于 2016-06-30 15:30</p>
+						</div>
+					</div>
+					<div class="mui-card-header mui-card-media" style="height:40vw;background-image:url(img/yuantiao.jpg)"></div>
+					<div class="mui-card-content">
+						<div class="mui-card-content-inner">
+							<p>Posted on January 18, 2016</p>
+							<p style="color: #333;">这里显示文章摘要，让读者对文章内容有个粗略的概念...</p>
+						</div>
+					</div>
+					<div class="mui-card-footer">页脚</div>
+					<div class="mui-card-footer">
+						<a class="mui-card-link">Like</a>
+						<a class="mui-card-link">Read more</a>
+					</div>
+				</div>
+				
+			</div>
+			
+			
+		</div>
+		
+		
+		<script type='text/javascript'>
+			mui.init({
+				/*设置各种手势操作的开关*/
+				gestureConfig:{
+				    tap: true, //默认为true
+				    doubletap: true, //默认为false
+				    longtap: true, //默认为false
+				    swipe: true, //默认为true
+				    drag: true, //默认为true
+				    hold:false,//默认为false，不监听
+				    release:false//默认为false，不监听
+				}
+			});
+			
+			
+			var slider = mui("#slider");
+			slider.slider({
+				interval: 1000
+			});
+		</script>
+	</body>
+</html>

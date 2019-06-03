@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>聊天</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" type="text/css" rel="stylesheet"/>
+		<script src="js/mui.min.js" type="text/javascript"></script>
+		<script src="js/jquery-3.3.1.min.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<style type="text/css">
+			@media all and (min-width: 640px) {
+				body,html,.wenwen-footer,.speak_window{width:640px!important;margin:0 auto}
+				.speak_window,.wenwen-footer{left:50%!important;margin-left:-320px}
+			}
+			input,button{outline:none;}
+			.wenwen-footer{width:100%;position:fixed;bottom:-5px;left:0;background:#fff;padding:3%;border-top:solid 1px #ddd;box-sizing:border-box;}
+			.wenwen_btn,.wenwen_help{width:20%;text-align:center;}
+			.wenwen_btn img,.wenwen_help img{height:40px;}
+			.wenwen_text{height:40px;border-radius:5px;border:solid 1px #636162;box-sizing:border-box;width:75%;text-align:center;overflow:hidden;margin-left:2%;}
+			.circle-button{padding:0 5px;}
+			.wenwen_text .circle-button{font-size:14px;color:#666;line-height:38px;}
+			.write_box{background:#fff;width:100%;height:40px;line-height:40px;display:none;}
+			.write_box input{height:40px;padding:0 5px;line-height:40px;width:100%;box-sizing:border-box;border:0;}
+			.wenwen_help button{width:95%;background:#42929d;color:#fff;border-radius:5px;border:0;height:40px;display:none;}
+			#wenwen{height:100%;}
+			.speak_window{overflow-y:scroll;height:100%;width:100%;position:fixed;top:0;left:0;}
+			.speak_box{margin-bottom:70px;padding:10px;}
+			.question,.answer{margin-bottom:1rem;}
+			.question{text-align:right;}
+			.question>div{display:inline-block;}
+			.left{float:left;}
+			.right{float:right;}
+			.clear{clear:both;}
+			.heard_img{height:60px;width:60px;border-radius:5px;overflow:hidden;background:#ddd;}
+			.heard_img img{width:100%;height:100%}
+			.question_text,.answer_text{box-sizing:border-box;position:relative;display:table-cell;min-height:60px;}
+			.question_text{padding-right:20px;}
+			.answer_text{padding-left:20px;}
+			.question_text p,.answer_text p{border-radius:10px;padding:.5rem;margin:0;font-size:14px;line-height:28px;box-sizing:border-box;vertical-align:middle;display:table-cell;height:60px;word-wrap:break-word;}
+			.answer_text p{background:#ccc;}
+			.question_text p{background:#42929d;color:#ccc;text-align:left;}
+			.question_text i,.answer_text i{width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;position:absolute;top:25px;}
+			.answer_text i{border-right:10px solid #ccc;left:10px;}
+			.question_text i{border-left:10px solid #42929d;right:10px;}
+			.answer_text p a{color:#42929d;display:inline-block;}
+			audio{display:none;}
+			.saying{position:fixed;bottom:30%;left:50%;width:120px;margin-left:-60px;display:none;}
+			.saying img{width:100%;}
+			.write_list{position:absolute;left:0;width:100%;background:#fff;border-top:solid 1px #ddd;padding:5px;line-height:30px;}
+		</style>
+
+		<div class="mui-content">
+			
+
+			<div class="speak_window">
+				<div class="speak_box">
+					<div class="answer">
+						<div class="heard_img left"><img src="img/user2.png"></div>
+						<div class="answer_text">
+							<p>Hey，您的专属导游在此！您可以向我提问哦!</p>
+							<i></i>
+						</div>
+					</div>
+					<div class="question">
+						<div class="heard_img right">
+							<img src="img/user1.jpg">
+						</div>
+						<div class="question_text clear" style="max-width: 545px;">
+							<p>阿斯蒂芬</p>
+							<i></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="wenwen-footer">
+				<div class="wenwen_text left">
+					<div class="write_box" style="display: block;">
+                        <input type="text" class="left" id="word" placeholder="请输入关键字">
+					</div>
+				</div>
+				<div class="wenwen_help right">
+					<button onclick="send()" class="right" style="display: block;">发送</button>
+				</div>
+				<div style="opacity:0;" class="clear"></div>
+			</div>
+
+			<script>
+				//进入当前页面时,链接webscoket
+				var url = 'ws://swoole.test:4000';
+
+				var ws = new WebSocket(url);
+
+				ws.onopen = function()
+				{
+					// Web Socket 已连接上，使用 send() 方法发送数据
+					ws.send(logindata);
+					console.log("发送数据:"+logindata);
+				};
+
+                ws.onmessage = function (evt)
+                {
+                    var received_msg = JSON.parse(evt.data);
+                    if(received_msg.cmd == 'message'){
+                        var html = '<div class="answer">'
+                                +'<div class="heard_img left"><img src="img/user2.png"></div>'
+                                +'<div class="answer_text">'
+                                +'<p>'+received_msg.message+'</p>'
+                                +'<i></i>'
+                                +'</div>'
+                                +'</div>';
+                        $('.speak_box').append(html);
+                    }
+                    if(received_msg.cmd == 'heart'){
+                        console.log('心跳中...')
+                    }
+                    console.log(received_msg);
+                };
+
+				ws.onclose = function()
+				{
+					// 关闭 websocket
+					console.log('连接已关闭');
+				};
+
+                setInterval(function () {
+                    var heart = {cmd:'heart','message':'ok','data':'heart'};
+                    ws.send(JSON.stringify(heart));
+                },29000);
+
+                function send()
+                {
+                    var message = $('#word').val();
+                    sendData.message = message;
+                    ws.send(JSON.stringify(sendData));
+                    $('#word').val('');
+                    var html = '<div class="question">'
+                            +'<div class="heard_img right">'
+                            +'<img src="img/user1.jpg">'
+                            +'</div>'
+                            +'<div class="question_text clear" style="max-width: 545px;">'
+                            +'<p>'+message+'</p>'
+                            +'<i></i>'
+                            +'</div>'
+                            +'</div>';
+                    $('.speak_box').append(html);
+                }
+			</script>
+			
+		</div>
+		
+	</body>
+</html>
